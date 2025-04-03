@@ -1,4 +1,3 @@
-import "../globals.css";
 import Logo from "@/components/logo";
 
 export const metadata = {

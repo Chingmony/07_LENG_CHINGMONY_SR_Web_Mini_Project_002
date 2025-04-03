@@ -4,24 +4,20 @@ import {
   workspaceAction,
   postWorkspaceAction,
   updateWorkspaceAction,
-  patchWorkspaceStatusAction,
+  patchWorkspaceAction,
 } from "@/app/action/workspaceAction";
 
 const SidebarComponent = () => {
+
   const [workspace, setWorkspace] = useState([]);
   const [isFormVisible, setFormVisible] = useState(false);
   const [workspaceName, setWorkspaceName] = useState("");
   const [editingWorkspace, setEditingWorkspace] = useState(null);
 
-  // Fetch all workspaces on mount
   useEffect(() => {
     const fetchData = async () => {
-      try {
         const { payload: fetchedWorkspaces } = await workspaceAction();
         setWorkspace(fetchedWorkspaces);
-      } catch (error) {
-        console.error("Error fetching workspaces:", error);
-      }
     };
     fetchData();
   }, []);
@@ -36,20 +32,21 @@ const SidebarComponent = () => {
       if (editingWorkspace) {
         // Update workspace
         const updatedData = { workspaceName };
+        console.log("edit w id", editingWorkspace.workspaceId)
+        console.log("aaaa", updatedData)
         const updatedWorkspace = await updateWorkspaceAction(
-          editingWorkspace.id,
+          editingWorkspace.workspaceId,
           updatedData
         );
         console.log("Updated Workspace:", updatedWorkspace);
 
-        // Update state directly
+      
         setWorkspace((prev) =>
           prev.map((wk) =>
-            wk.id === editingWorkspace.id ? { ...wk, workspaceName } : wk
+            wk.workspaceId === editingWorkspace.workspaceId ? { ...wk, workspaceName } : wk
           )
         );
       } else {
-        // Add new workspace
         const newWorkspace = await postWorkspaceAction({ workspaceName });
         console.log("New Workspace Added:", newWorkspace);
         setWorkspace((prev) => [...prev, newWorkspace.payload]);
@@ -74,10 +71,10 @@ const SidebarComponent = () => {
   // Toggle favorite status
   const toggleFavorite = async (wk) => {
     try {
-      await patchWorkspaceStatusAction(wk.id, !wk.isFavorite);
+      await patchWorkspaceAction(wk.workspaceId, !wk.isFavorite);
       setWorkspace((prev) =>
         prev.map((workspaceItem) =>
-          workspaceItem.id === wk.id
+          workspaceItem.workspaceId === wk.workspaceId
             ? { ...workspaceItem, isFavorite: !workspaceItem.isFavorite }
             : workspaceItem
         )
@@ -89,10 +86,10 @@ const SidebarComponent = () => {
 
   return (
     <main>
-      <div className="text-[50px] align-center">PLanit</div>
-      <div className="w-64 bg-white border-r border-gray-200 p-4 space-y-6">
+      <div className="text-[50px] align-center ">PLanit</div>
+      <div className="w-64  bg-white border-r border-gray-200 p-4 space-y-6">
         {/* Workspace section */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between ">
           <h2 className="text-base font-semibold text-gray-800">Workspace</h2>
           <button
             onClick={() => {
@@ -110,7 +107,7 @@ const SidebarComponent = () => {
         <nav className="mt-4 space-y-3">
           {workspace.map((wk) => (
             <div
-              key={wk.id}
+              key={wk.workspaceId}
               className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100"
             >
               <span>{wk.workspaceName}</span>
@@ -130,7 +127,7 @@ const SidebarComponent = () => {
           <nav className="mt-4 space-y-3">
             {favoriteWorkspaces.map((wk) => (
               <div
-                key={wk.id}
+                key={wk.workspaceId}
                 className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100"
               >
                 <span>{wk.workspaceName}</span>

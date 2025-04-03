@@ -9,6 +9,7 @@ const HeaderComponent = async () => {
   return (
     <div className="flex justify-between items-center border-b border-gray-200 py-4">
       {/* Workspace Navigation */}
+      
       <div className="flex items-center gap-2 text-sm">
         <span>Workspace</span>
         <span></span>

@@ -12,6 +12,22 @@ export const getAllWorkspace = async () => {
         console.log(error);
     }
 }
+//getworkspace by id 
+export const getWorkspaceById = async (id) => {
+    const token = await headerToken(); 
+    const res = await fetch(`${process.env.NEXT_APIURL}/workspace/${id}`, {
+      method: "GET", 
+      headers: {
+        ...token, 
+        "Content-Type": "application/json", 
+      },
+    });
+
+    const data = await res.json();
+    return data;
+ 
+};
+
 
 //postWorkspace
 export const postWorkspace = async (workspaceData) => {
@@ -37,7 +53,8 @@ export const postWorkspace = async (workspaceData) => {
   //update
   export const updateWorkspace = async (id, updatedData) => {
     const token = await headerToken(); 
-
+        console.log("update workspace updated data : ", updatedData);
+        
    
         const res = await fetch(`${process.env.NEXT_APIURL}/workspace/${id}`, {
             method: "PUT",
@@ -54,4 +71,24 @@ export const postWorkspace = async (workspaceData) => {
         return data;
     
 };
+
+//patch
+
+export const patchWorkspace = async (id, patchedData) => {
+    const { isFavorite } = patchedData;
+    const token = await headerToken(); 
+    const res = await fetch( `${process.env.NEXT_APIURL}/workspace/${id}/favorite?favorite=${isFavorite}`, {
+      method: "PATCH",
+      headers: {
+        ...token, 
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify(patchedData), 
+    });
+
+    const data = await res.json();
+    return data;
+
+};
+
 
