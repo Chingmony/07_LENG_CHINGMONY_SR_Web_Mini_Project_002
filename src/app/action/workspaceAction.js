@@ -17,10 +17,14 @@ export const updateWorkspaceAction = async (id, updateWD) => {
     return workspaceUpdate;
 }
 
-export const getWorkspaceByIdAction = async ( id, getWD) => {
-    const workspaceById = await getWorkspaceById(id, getWD);
+export const getWorkspaceByIdAction = async ( id) => {
+    const workspaceById = await getWorkspaceById(id);
     return workspaceById;
 }
+
+
+
+
 export const patchWorkspaceAction = async (id, patchedData) => {
     const { isFavorite } = patchedData;
     const workspacePatch = await patchWorkspace(id, patchedData);
